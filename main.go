@@ -2,21 +2,26 @@ package main
 
 import "fmt"
 
-// problem -> https://leetcode.com/problems/two-sum/description/
+// problem -> https://leetcode.com/problems/roman-to-integer/
 
 func main() {
-	s := []int{3, 2, 3}
-	fmt.Println(twoSum(s, 6))
+	s := []int{1, 1, 2}
+	fmt.Println(removeDuplicates(s))
 }
 
-// nums = [2, 7, 1, 5], target = 9, out: [0, 1]
-func twoSum(nums []int, target int) []int {
-	for i := range nums {
-		for j := range i {
-			if nums[j]+nums[i] == target {
-				return []int{j, i}
-			}
+func removeDuplicates(nums []int) int {
+	if len(nums) == 0 {
+		return 0
+	}
+
+	k := 1
+	for i := 1; i <= len(nums)-1; i++ {
+		// если текущий элемент != предыдущему - мы нашли новый элемент!
+		if nums[i] != nums[i-1] {
+			nums[k] = nums[i] // передвигаем его в начало
+			k++
 		}
 	}
-	return []int{}
+
+	return k
 }
