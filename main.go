@@ -1,27 +1,41 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
-// problem -> https://leetcode.com/problems/roman-to-integer/
+// problem -> https://leetcode.com/problems/single-number/
 
 func main() {
-	s := []int{1, 1, 2}
-	fmt.Println(removeDuplicates(s))
+	// s := []int{4, 1, 2, 1, 2}
+	fmt.Println(isAnagram(
+		"rellepg",
+		"speller",
+	),
+	)
+
 }
 
-func removeDuplicates(nums []int) int {
-	if len(nums) == 0 {
-		return 0
+// Входные данные: nums = [4,1,2,1,2]
+// Вывод: 4
+
+func isAnagram(s string, t string) bool {
+
+	if len(s) != len(t) {
+		return false
 	}
 
-	k := 1
-	for i := 1; i <= len(nums)-1; i++ {
-		// если текущий элемент != предыдущему - мы нашли новый элемент!
-		if nums[i] != nums[i-1] {
-			nums[k] = nums[i] // передвигаем его в начало
-			k++
+	m := make(map[byte]int, len(s))
+
+	for i := 0; i < len(s); i++ {
+		m[s[i]]++
+		m[t[i]]--
+	}
+
+	for _, v := range m {
+		if v != 0 {
+			return false
 		}
 	}
-
-	return k
+	return true
 }
