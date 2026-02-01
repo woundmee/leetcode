@@ -1,41 +1,27 @@
 package main
 
-import (
-	"fmt"
-)
-
-// problem -> https://leetcode.com/problems/single-number/
+// problem -> https://leetcode.com/problems/move-zeroes/
 
 func main() {
-	// s := []int{4, 1, 2, 1, 2}
-	fmt.Println(isAnagram(
-		"rellepg",
-		"speller",
-	),
-	)
+	nums := []int{0, 1, 0, 3, 12}
+	moveZeroes(nums)
 
 }
 
-// Входные данные: nums = [4,1,2,1,2]
-// Вывод: 4
+// Входные данные: nums = [0,1,0,3,12]
+// Выходные данные: [1,3,12,0,0]
 
-func isAnagram(s string, t string) bool {
+func moveZeroes(nums []int) {
 
-	if len(s) != len(t) {
-		return false
+	if len(nums) <= 1 {
+		return
 	}
 
-	m := make(map[byte]int, len(s))
-
-	for i := 0; i < len(s); i++ {
-		m[s[i]]++
-		m[t[i]]--
-	}
-
-	for _, v := range m {
-		if v != 0 {
-			return false
+	last := 0
+	for i := 0; i < len(nums); i++ {
+		if nums[i] != 0 {
+			nums[last], nums[i] = nums[i], nums[last]
+			last++ // сдвигаю до следующего НЕнулевого элемента
 		}
 	}
-	return true
 }
