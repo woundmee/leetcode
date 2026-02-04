@@ -1,27 +1,28 @@
 package main
 
-// problem -> https://leetcode.com/problems/move-zeroes/
+import (
+	"fmt"
+	"slices"
+)
 
-func main() {
-	nums := []int{0, 1, 0, 3, 12}
-	moveZeroes(nums)
+// problem -> https://neetcode.io/problems/top-k-elements-in-list/
 
+func topKFrequent(nums []int, k int) []int {
+	res := make([]int, 0)
+	for range k {
+		max := slices.Max(nums)
+		res = append(res, max)
+		_ = slices.DeleteFunc(
+			nums,
+			func(v int) bool { return v == max },
+		)
+	}
+
+	fmt.Println(res)
+	return res
 }
 
-// Входные данные: nums = [0,1,0,3,12]
-// Выходные данные: [1,3,12,0,0]
-
-func moveZeroes(nums []int) {
-
-	if len(nums) <= 1 {
-		return
-	}
-
-	last := 0
-	for i := 0; i < len(nums); i++ {
-		if nums[i] != 0 {
-			nums[last], nums[i] = nums[i], nums[last]
-			last++ // сдвигаю до следующего НЕнулевого элемента
-		}
-	}
+func main() {
+	topKFrequent([]int{1, 2, 2, 3, 3, 3, 5, 7, 7}, 2)
+	topKFrequent([]int{7, 7}, 1)
 }
