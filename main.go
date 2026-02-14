@@ -1,54 +1,55 @@
 package main
 
-import (
-	"encoding/base64"
-	"fmt"
-	"strings"
-)
-
-// problem --> https://neetcode.io/problems/string-encode-and-decode/
+// problem --> https://neetcode.io/problems/implement-queue-using-stacks/
 
 func main() {
-	s := Solution{}
-	arr := []string{"", ""}
-	fmt.Println(arr)
 
-	enc := s.Encode(arr)
-	dec := s.Decode(enc)
-
-	// fmt.Println(enc)
-	fmt.Println(dec)
 }
 
-type Solution struct{}
-
-func (s *Solution) Encode(strs []string) string {
-	var res string
-	for _, v := range strs {
-		enc := base64.StdEncoding.EncodeToString([]byte(v))
-		res += enc + ":"
-	}
-	return res
+type MyQueue struct {
+	in  []int
+	out []int
 }
 
-func (s *Solution) Decode(encoded string) []string {
-	counter, all := 0, len(strings.Split(encoded, ":"))
-	var res []string
+func Constructor() MyQueue {
+	return MyQueue{
+		in:  make([]int, 0),
+		out: make([]int, 0),
+	}
+}
 
-	arr := strings.Split(encoded, ":")
+func (this *MyQueue) Push(x int) {
+	// [1 2 3 4 5 ...]
+	this.in = append(this.in, x) // просто добавляем элемент
+}
 
-	for _, v := range arr {
-		counter++
-		if all == counter {
-			break
+// удаляет и возвращает этот же элемент
+func (this *MyQueue) Pop() int {
+
+	// логика такая же, как в Peek(), но с удалением
+	peek := this.Peek()
+	this.out = this.out[:len(this.out)-1]
+	return peek
+}
+
+// просматриваем значение верхнего уровня
+func (this *MyQueue) Peek() int {
+
+	// in: 1 2 3
+	// out 3 2 1
+
+	if len(this.out) == 0 {
+		// переложить in -> out
+		for len(this.in) > 0 {
+			lastIndex := len(this.in) - 1
+			this.out = append(this.out, this.in[lastIndex])
+			this.in = this.in[:lastIndex]
 		}
-		dec, err := base64.StdEncoding.DecodeString(v)
-		if err != nil {
-			fmt.Println("error: ", err, "dec: ", string(dec))
-		}
-		res = append(res, string(dec))
-
 	}
 
-	return res
+	return this.out[len(this.out)-1]
+}
+
+func (this *MyQueue) Empty() bool {
+	return len(this.in) == 0 && len(this.out) == 0 // если оба списка пустые - return true
 }
