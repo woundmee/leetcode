@@ -2,29 +2,44 @@ package main
 
 import "fmt"
 
-// problem --> https://neetcode.io/problems/reverse-string/
+// problem --> https://neetcode.io/problems/merge-strings-alternately/
 
 func main() {
 
-	reverseString([]byte("neet"))
+	fmt.Println(
+		mergeAlternately("abc", "xyz"),
+		mergeAlternately("ab", "abbxxc"),
+	)
 
 }
 
-// ИСПОЛЬЗОВАЛ алгоритм "2 указателя"
+// Input: word1 = "abc", word2 = "xyz"
+// Output: "axbycz"
 
-// перевернуть исходный массив - O(1)
-// Input: s = ["n","e","e","t"]
-// Output: ["t","e","e","n"]
+func mergeAlternately(word1 string, word2 string) string {
 
-func reverseString(s []byte) {
-	left, right := 0, len(s)-1
-	fmt.Println(string(s))
-
-	for right > left {
-		s[left], s[right] = s[right], s[left]
-		left++
-		right--
+	var minLen int
+	var isWord1Min bool
+	if len(word1) > len(word2) {
+		minLen = len(word2)
+		isWord1Min = false
+	} else {
+		minLen = len(word1)
+		isWord1Min = true
 	}
 
-	fmt.Println(string(s))
+	var res string
+
+	for i := 0; i <= minLen-1; i++ {
+		res += string(word1[i]) + string(word2[i])
+		if i == minLen-1 {
+			if isWord1Min {
+				res += word2[i+1:]
+			} else {
+				res += word1[i+1:]
+			}
+		}
+	}
+
+	return res
 }
