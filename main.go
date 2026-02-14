@@ -1,39 +1,30 @@
 package main
 
-// problem --> https://neetcode.io/problems/majority-element/question
+import "fmt"
+
+// problem --> https://neetcode.io/problems/reverse-string/
 
 func main() {
-	_ = majorityElement([]int{5, 5, 1, 1, 1, 5, 5})
+
+	reverseString([]byte("neet"))
+
 }
 
-// вернуть элемент большинства из массива, который встречается n/2 раза, где n - длинна массива.
+// ИСПОЛЬЗОВАЛ алгоритм "2 указателя"
 
-func majorityElement(nums []int) int {
+// перевернуть исходный массив - O(1)
+// Input: s = ["n","e","e","t"]
+// Output: ["t","e","e","n"]
 
-	if len(nums) == 0 {
-		return 0
+func reverseString(s []byte) {
+	left, right := 0, len(s)-1
+	fmt.Println(string(s))
+
+	for right > left {
+		s[left], s[right] = s[right], s[left]
+		left++
+		right--
 	}
 
-	m := make(map[int]int)
-
-	for i := range nums {
-		if m[nums[i]] == nums[i] {
-			m[nums[i]]++
-			continue
-		}
-
-		m[nums[i]]++
-	}
-
-	max := 0
-	val := 0
-	for k, v := range m {
-		if v > max {
-			max = v
-			val = k
-		}
-	}
-
-	// fmt.Println(val)
-	return val
+	fmt.Println(string(s))
 }
