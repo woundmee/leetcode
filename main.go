@@ -1,57 +1,39 @@
 package main
 
-import (
-	"fmt"
-	"strings"
-	"unicode"
-)
-
-// problem --> https://neetcode.io/problems/is-palindrome/
+// problem --> https://neetcode.io/problems/majority-element/question
 
 func main() {
-
-	// res := isPalindrome("Was it a car or a cat I saw?")
-	res := isPalindrome("tab a cat")
-	fmt.Println(res)
-
+	_ = majorityElement([]int{5, 5, 1, 1, 1, 5, 5})
 }
 
-// 2 указателя
+// вернуть элемент большинства из массива, который встречается n/2 раза, где n - длинна массива.
 
-// Input: s = "Was it a car or a cat I saw?"
-// Output: true
+func majorityElement(nums []int) int {
 
-func isPalindrome(s string) bool {
+	if len(nums) == 0 {
+		return 0
+	}
 
-	left, right := 0, len(s)-1
-	r := []rune(s)
+	m := make(map[int]int)
 
-	for right > left {
-
-		// letel?
-		// ^   ^
-
-		if !unicode.IsLetter(r[left]) && !unicode.IsDigit(r[left]) {
-			left++
-			continue
-		} else if !unicode.IsLetter(r[right]) && !unicode.IsDigit(r[right]) {
-			right--
+	for i := range nums {
+		if m[nums[i]] == nums[i] {
+			m[nums[i]]++
 			continue
 		}
 
-		fmt.Println(
-			string(r[left]),
-			string(r[right]),
-		)
+		m[nums[i]]++
+	}
 
-		if strings.EqualFold(string(r[left]), string(r[right])) {
-			left++
-			right--
-		} else {
-			return false
+	max := 0
+	val := 0
+	for k, v := range m {
+		if v > max {
+			max = v
+			val = k
 		}
 	}
 
-	return true
-
+	// fmt.Println(val)
+	return val
 }
