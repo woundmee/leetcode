@@ -1,44 +1,53 @@
 package main
 
-import "fmt"
+import (
+	"encoding/base64"
+	"fmt"
+	"strings"
+)
 
-// problem --> https://neetcode.io/problems/merge-strings-alternately/
+// problem --> https://neetcode.io/problems/string-encode-and-decode/
 
 func main() {
+	s := Solution{}
+	arr := []string{"", ""}
+	fmt.Println(arr)
 
-	fmt.Println(
-		mergeAlternately("abc", "xyz"),
-		mergeAlternately("ab", "abbxxc"),
-	)
+	enc := s.Encode(arr)
+	dec := s.Decode(enc)
 
+	// fmt.Println(enc)
+	fmt.Println(dec)
 }
 
-// Input: word1 = "abc", word2 = "xyz"
-// Output: "axbycz"
+type Solution struct{}
 
-func mergeAlternately(word1 string, word2 string) string {
-
-	var minLen int
-	var isWord1Min bool
-	if len(word1) > len(word2) {
-		minLen = len(word2)
-		isWord1Min = false
-	} else {
-		minLen = len(word1)
-		isWord1Min = true
-	}
-
+func (s *Solution) Encode(strs []string) string {
 	var res string
+	for _, v := range strs {
+		enc := base64.StdEncoding.EncodeToString([]byte(v))
+		res += enc + ":"
+	}
+	return res
+}
 
-	for i := 0; i <= minLen-1; i++ {
-		res += string(word1[i]) + string(word2[i])
-		if i == minLen-1 {
-			if isWord1Min {
-				res += word2[i+1:]
-			} else {
-				res += word1[i+1:]
-			}
+func (s *Solution) Decode(encoded string) []string {
+	counter, all := 0, len(strings.Split(encoded, ":"))
+	var res []string
+
+	arr := strings.Split(encoded, ":")
+
+	for _, v := range arr {
+		counter++
+		if all == counter {
+			break
 		}
+		dec, err := base64.StdEncoding.DecodeString(v)
+		if err != nil {
+			fmt.Println("error: ", err, "dec: ", string(dec))
+		}
+		res = append(res, string(dec))
+
 	}
 
 	return res
