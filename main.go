@@ -1,31 +1,57 @@
 package main
 
+import (
+	"fmt"
+	"strings"
+	"unicode"
+)
+
+// problem --> https://neetcode.io/problems/is-palindrome/
+
 func main() {
+
+	// res := isPalindrome("Was it a car or a cat I saw?")
+	res := isPalindrome("tab a cat")
+	fmt.Println(res)
+
 }
 
-// problem --> https://leetcode.com/problems/remove-duplicates-from-sorted-list
+// 2 указателя
 
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
+// Input: s = "Was it a car or a cat I saw?"
+// Output: true
 
-// [1,1,2]
-func deleteDuplicates(head *ListNode) *ListNode {
+func isPalindrome(s string) bool {
 
-	// current/cursor нужен, чтобы не трогать head
-	curr := head
+	left, right := 0, len(s)-1
+	r := []rune(s)
 
-	for curr != nil && curr.Next != nil {
-		if curr.Val == curr.Next.Val {
-			// если текущее значение == следующему
-			curr.Next = curr.Next.Next // присваиваем текущей следующий за ним
+	for right > left {
+
+		// letel?
+		// ^   ^
+
+		if !unicode.IsLetter(r[left]) && !unicode.IsDigit(r[left]) {
+			left++
+			continue
+		} else if !unicode.IsLetter(r[right]) && !unicode.IsDigit(r[right]) {
+			right--
+			continue
+		}
+
+		fmt.Println(
+			string(r[left]),
+			string(r[right]),
+		)
+
+		if strings.EqualFold(string(r[left]), string(r[right])) {
+			left++
+			right--
 		} else {
-			// иначе, если значение не совпадют - идем дальше
-			curr = curr.Next
+			return false
 		}
 	}
 
-	// возвращаем весь список
-	return head
+	return true
+
 }
