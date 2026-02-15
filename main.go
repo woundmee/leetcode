@@ -1,55 +1,65 @@
 package main
 
-// problem --> https://neetcode.io/problems/implement-queue-using-stacks/
+import "fmt"
+
+// problem --> https://neetcode.io/problems/validate-parentheses/
 
 func main() {
+	fmt.Println(isValid("]"))
+	fmt.Println(isValid("(){}}{"))
+	fmt.Println(isValid("([{}])"))
+	fmt.Println(isValid("[(])"))
+	fmt.Println(isValid("[([]]]"))
+	fmt.Println(isValid("()()"))
+	fmt.Println(isValid("[[]"))
 
 }
 
-type MyQueue struct {
-	in  []int
-	out []int
-}
+func isValid(s string) bool {
+	// работа со стэком:
+	// если скобка открывающая - кладем в стэк
+	// далее смотрим, если приходит закрывающая скобка - сравниваем со значением в стэке (с конца слайса)
+	// если не совпадают - return false
+	// если совпадают - удаляем из стэка открывающую скобку
 
-func Constructor() MyQueue {
-	return MyQueue{
-		in:  make([]int, 0),
-		out: make([]int, 0),
+	// ( - 40
+	// ) - 41
+	// [ - 91
+	// ] - 93
+	// { - 123
+	// } - 125
+
+	if len(s) < 1 {
+		return false
 	}
-}
 
-func (this *MyQueue) Push(x int) {
-	// [1 2 3 4 5 ...]
-	this.in = append(this.in, x) // просто добавляем элемент
-}
+	brackets := make([]byte, 0)
 
-// удаляет и возвращает этот же элемент
-func (this *MyQueue) Pop() int {
+	if s[0] == 41 || s[0] == 93 || s[0] == 125 {
+		return false
+	}
 
-	// логика такая же, как в Peek(), но с удалением
-	peek := this.Peek()
-	this.out = this.out[:len(this.out)-1]
-	return peek
-}
+	for i := range s {
+		if s[i] == 40 || s[i] == 91 || s[i] == 123 {
+			brackets = append(brackets, s[i])
+		} else {
+			if len(brackets) == 0 {
+				return false
+			}
+			lastBracket := brackets[len(brackets)-1]
 
-// просматриваем значение верхнего уровня
-func (this *MyQueue) Peek() int {
+			if s[i]-1 != lastBracket && s[i]-2 != lastBracket {
+				return false
+			}
+			brackets = brackets[:len(brackets)-1]
 
-	// in: 1 2 3
-	// out 3 2 1
-
-	if len(this.out) == 0 {
-		// переложить in -> out
-		for len(this.in) > 0 {
-			lastIndex := len(this.in) - 1
-			this.out = append(this.out, this.in[lastIndex])
-			this.in = this.in[:lastIndex]
 		}
 	}
 
-	return this.out[len(this.out)-1]
-}
+	if len(brackets) != 0 {
+		return false
+	}
 
-func (this *MyQueue) Empty() bool {
-	return len(this.in) == 0 && len(this.out) == 0 // если оба списка пустые - return true
+	return true
+
 }
