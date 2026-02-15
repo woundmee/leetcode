@@ -1,65 +1,48 @@
 package main
 
-import "fmt"
-
-// problem --> https://neetcode.io/problems/validate-parentheses/
+// problem --> https://neetcode.io/problems/implement-stack-using-queues/
 
 func main() {
-	fmt.Println(isValid("]"))
-	fmt.Println(isValid("(){}}{"))
-	fmt.Println(isValid("([{}])"))
-	fmt.Println(isValid("[(])"))
-	fmt.Println(isValid("[([]]]"))
-	fmt.Println(isValid("()()"))
-	fmt.Println(isValid("[[]"))
 
 }
 
-func isValid(s string) bool {
-	// работа со стэком:
-	// если скобка открывающая - кладем в стэк
-	// далее смотрим, если приходит закрывающая скобка - сравниваем со значением в стэке (с конца слайса)
-	// если не совпадают - return false
-	// если совпадают - удаляем из стэка открывающую скобку
+type MyStack struct {
+	queue []int
+}
 
-	// ( - 40
-	// ) - 41
-	// [ - 91
-	// ] - 93
-	// { - 123
-	// } - 125
-
-	if len(s) < 1 {
-		return false
+func Constructor() MyStack {
+	return MyStack{
+		queue: make([]int, 0),
 	}
+}
 
-	brackets := make([]byte, 0)
+func (this *MyStack) Push(x int) {
+	this.queue = append(this.queue, x)
+	// slices.Reverse(this.queue)  // по условию задачи нельзя использовать
 
-	if s[0] == 41 || s[0] == 93 || s[0] == 125 {
-		return false
+	// нужно перевернуть список
+	// было: [1 2 3]
+	// стало: [3 2 1]
+	// т.е. очередь сделать ровном наоборот
+
+	for range len(this.queue) - 1 {
+		val := this.queue[0]                 // 1-ый элемент
+		this.queue = this.queue[1:]          // удалили 1-ый элемент
+		this.queue = append(this.queue, val) // добавили в конец
+
 	}
+}
 
-	for i := range s {
-		if s[i] == 40 || s[i] == 91 || s[i] == 123 {
-			brackets = append(brackets, s[i])
-		} else {
-			if len(brackets) == 0 {
-				return false
-			}
-			lastBracket := brackets[len(brackets)-1]
+func (this *MyStack) Pop() int {
+	val := this.queue[0]
+	this.queue = this.queue[1:]
+	return val
+}
 
-			if s[i]-1 != lastBracket && s[i]-2 != lastBracket {
-				return false
-			}
-			brackets = brackets[:len(brackets)-1]
+func (this *MyStack) Top() int {
+	return this.queue[0]
+}
 
-		}
-	}
-
-	if len(brackets) != 0 {
-		return false
-	}
-
-	return true
-
+func (this *MyStack) Empty() bool {
+	return len(this.queue) == 0
 }
