@@ -1,58 +1,48 @@
 package main
 
-import (
-	"strconv"
-)
+// problem --> https://neetcode.io/problems/minimum-stack/
 
-// problem --> https://neetcode.io/problems/baseball-game/
+// stack -> LIFO
 
 func main() {
-	calPoints([]string{"1", "2", "+", "C", "5", "D"})
+
 }
 
-// in: [1 2 + C 5 D]
-// out: 18
+type MinStack struct {
+	stack []int
+	mins  []int
+}
 
-// explantation:
-// 1 - add
-// 2 - add   --> [1 2]
-// + - суммирование 2х предыдущих: 1+2  -> [1 2 3]
-// C - удалить предыдущий результат  -> [1 2]
-// 5 - добавление  -> [1 2 5]
-// D - умножение 2х предыдущих: 2*5  -> [1 2 5 10]
-
-// out: сумма всех: 1+2+5+10 = 18
-
-// ================= //
-// 1 2
-
-func calPoints(operations []string) int {
-
-	stack := make([]int, 0, len(operations))
-
-	for i := range operations {
-		if digit, err := strconv.Atoi(operations[i]); err == nil {
-			stack = append(stack, digit)
-			continue
-		}
-
-		switch operations[i] {
-		case "+":
-			// note: нужно условие проверки на len(stack) >= 2 ?!
-			n := len(stack)
-			addition := stack[n-1] + stack[n-2]
-			stack = append(stack, addition)
-		case "C":
-			stack = stack[:len(stack)-1]
-		case "D":
-			stack = append(stack, stack[len(stack)-1]*2)
-		}
+func Constructor() MinStack {
+	return MinStack{
+		stack: make([]int, 0),
+		mins:  make([]int, 0),
 	}
+}
 
-	var sum int
-	for i := range stack {
-		sum += stack[i]
+func (this *MinStack) Push(val int) {
+	this.stack = append(this.stack, val)
+
+	if len(this.mins) == 0 {
+		this.mins = append(this.mins, val)
+	} else if this.mins[len(this.mins)-1] > val {
+		this.mins = append(this.mins, val)
+	} else {
+		this.mins = append(this.mins, this.mins[len(this.mins)-1])
 	}
+}
 
-	return sum
+func (this *MinStack) Pop() {
+	if len(this.stack) != 0 && len(this.mins) != 0 {
+		this.stack = this.stack[:len(this.stack)-1]
+		this.mins = this.mins[:len(this.mins)-1]
+	}
+}
+
+func (this *MinStack) Top() int {
+	return this.stack[len(this.stack)-1]
+}
+
+func (this *MinStack) GetMin() int {
+	return this.mins[len(this.mins)-1]
 }
