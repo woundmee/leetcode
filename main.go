@@ -1,30 +1,29 @@
 package main
 
-import "fmt"
-
-// problem --> https://leetcode.com/problems/minimum-string-length-after-removing-substrings/
+// problem --> https://leetcode.com/problems/make-the-string-great/
 
 func main() {
-	minLength("ABFCACDB")
-	minLength("ACBBD")
-	minLength("BJKDKABJ")
+	makeGood("leEeetcode")
+	makeGood("abBAcC")
 }
 
-func minLength(s string) int {
+// удаляем парные буквы разных регистров, которые находятся вместе
+// пример: aA, Aa
+// leEeetcode  --> eE - удаляем --> leetcode
 
-	stack := []rune{}
-	// stack := make([]rune, len(s)/2)
-	for _, curr := range s {
-		if len(stack) > 0 {
+func makeGood(s string) string {
+	stack := make([]byte, 0)
+
+	for i := range s {
+		if len(stack) != 0 {
 			last := stack[len(stack)-1]
-			if (last == 'A' && curr == 'B') || (last == 'C' && curr == 'D') {
+			// [a b] B
+			if last-32 == s[i] || last+32 == s[i] {
 				stack = stack[:len(stack)-1]
 				continue
 			}
 		}
-		stack = append(stack, curr)
+		stack = append(stack, s[i])
 	}
-
-	fmt.Println(string(stack), "-", len(stack))
-	return len(stack)
+	return string(stack)
 }
