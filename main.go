@@ -1,52 +1,30 @@
 package main
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"slices"
-)
+import "fmt"
 
-// int                              out
-// ============================================
-// 1212#                            abl
-// 8512#12#15#23#15#18#12#4         helloworld
-
-// ПРАВИЛА
-// =======
-// Символы с «a» по «i» отображаются в числа от «1» до «9» соответственно
-// Символы с «j» по «z» отображаются в числа от «10#» до «26#» соответственно
+// problem --> https://leetcode.com/problems/minimum-string-length-after-removing-substrings/
 
 func main() {
+	minLength("ABFCACDB")
+	minLength("ACBBD")
+	minLength("BJKDKABJ")
+}
 
-	scanner := bufio.NewScanner(os.Stdin)
-	var line string
-	if scanner.Scan() {
-		line = scanner.Text()
-	}
+func minLength(s string) int {
 
-	var res []byte
-
-	for i := len(line) - 1; i >= 0; {
-		var number int
-
-		lastSymbol := line[i]
-		if lastSymbol == '#' {
-
-			tens := int(line[i-2] - '0')
-			ones := int(line[i-1] - '0')
-			number = tens*10 + ones
-
-			i -= 3
-		} else {
-			number = int(line[i] - '0')
-			i -= 1
+	stack := []rune{}
+	// stack := make([]rune, len(s)/2)
+	for _, curr := range s {
+		if len(stack) > 0 {
+			last := stack[len(stack)-1]
+			if (last == 'A' && curr == 'B') || (last == 'C' && curr == 'D') {
+				stack = stack[:len(stack)-1]
+				continue
+			}
 		}
-
-		letter := byte('a' + number - 1)
-		res = append(res, letter)
+		stack = append(stack, curr)
 	}
 
-	slices.Reverse(res)
-	fmt.Println(string(res))
+	fmt.Println(string(stack), "-", len(stack))
+	return len(stack)
 }
