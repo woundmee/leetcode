@@ -1,42 +1,52 @@
 package main
 
 import (
-	"unicode"
+	"bufio"
+	"fmt"
+	"os"
+	"slices"
 )
 
-// problem --> https://leetcode.com/problems/clear-digits/
+// int                              out
+// ============================================
+// 1212#                            abl
+// 8512#12#15#23#15#18#12#4         helloworld
+
+// ПРАВИЛА
+// =======
+// Символы с «a» по «i» отображаются в числа от «1» до «9» соответственно
+// Символы с «j» по «z» отображаются в числа от «10#» до «26#» соответственно
 
 func main() {
-	clearDigits("abc34")
-}
 
-// abc34
-// удаляем цифру удаляем ближайщий к нему символ
-// out: a
-
-// abc34
-//     ^
-// stack: [a]
-
-func clearDigits(s string) string {
-
-	stack := []rune{}
-	for _, v := range s {
-		if unicode.IsLetter(v) {
-			stack = append(stack, v)
-			continue
-		}
-
-		if len(stack) != 0 && unicode.IsDigit(v) {
-			stack = stack[:len(stack)-1]
-		}
+	scanner := bufio.NewScanner(os.Stdin)
+	var line string
+	if scanner.Scan() {
+		line = scanner.Text()
 	}
 
-	var res string
-	for _, v := range stack {
-		res += string(v)
+	var res []byte
+
+	for i := len(line) - 1; i >= 0; {
+		var number int
+
+		lastSymbol := line[i]
+		if lastSymbol == '#' {
+
+			tens := int(line[i-2] - '0')
+			ones := int(line[i-1] - '0')
+			number = tens*10 + ones
+
+			i -= 3
+		} else {
+			number = int(line[i] - '0')
+			i -= 1
+		}
+
+		letter := byte('a' + number - 1)
+		res = append(res, letter)
 	}
 
-	return res
-
+	slices.Reverse(res)
+	fmt.Println(string(res))
 }
