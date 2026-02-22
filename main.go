@@ -1,41 +1,24 @@
 package main
 
-// problem --> https://leetcode.com/problems/final-prices-with-a-special-discount-in-a-shop/
+// problem --> https://neetcode.io/problems/move-zeroes/
 
 func main() {
-	// finalPrices([]int{8, 4, 6, 2, 3})
-	finalPrices([]int{8, 7, 4, 2, 8, 1, 7, 7, 10, 1})
+	moveZeroes([]int{0, 0, 1, 2, 0, 5})
+	moveZeroes([]int{1, 0, 2, 0, 0, 3, 4})
+
 }
 
-// 8, 7, 4, 2, 8, 1, 7, 7, 10, 1
-// 1  3  2  1  7
+// in:	0,0,1,2,0,5
+// out:	1,2,5,0,0,0
 
-// ===================
+// note: задача двигать нули в конец
 
-// in: [8,4,6,2,3]
-// out: [4,2,4,2,3]
-
-// проходимся и находимся наименьший объект справа, далее prices[i]-minElement
-// 8-4=4, 4-2=2, 6-2=4, 2, 3 - для у нет наименьшего правого - скидки нет.
-
-func finalPrices(prices []int) []int {
-
-	res := make([]int, len(prices))
-	copy(res, prices)
-	stack := []int{}
-
-	for i, currentPrice := range prices {
-		for len(stack) > 0 {
-			lastIdx := stack[len(stack)-1]
-			lastPrice := prices[lastIdx]
-			if lastPrice >= currentPrice {
-				res[lastIdx] = lastPrice - currentPrice
-				stack = stack[:len(stack)-1]
-			} else {
-				break
-			}
+func moveZeroes(nums []int) {
+	var left int
+	for right := range nums {
+		if nums[right] != 0 {
+			nums[left], nums[right] = nums[right], nums[left]
+			left++
 		}
-		stack = append(stack, i)
 	}
-	return res
 }
