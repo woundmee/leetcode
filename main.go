@@ -1,29 +1,41 @@
 package main
 
-// problem --> https://leetcode.com/problems/make-the-string-great/
+// problem --> https://leetcode.com/problems/final-prices-with-a-special-discount-in-a-shop/
 
 func main() {
-	makeGood("leEeetcode")
-	makeGood("abBAcC")
+	// finalPrices([]int{8, 4, 6, 2, 3})
+	finalPrices([]int{8, 7, 4, 2, 8, 1, 7, 7, 10, 1})
 }
 
-// удаляем парные буквы разных регистров, которые находятся вместе
-// пример: aA, Aa
-// leEeetcode  --> eE - удаляем --> leetcode
+// 8, 7, 4, 2, 8, 1, 7, 7, 10, 1
+// 1  3  2  1  7
 
-func makeGood(s string) string {
-	stack := make([]byte, 0)
+// ===================
 
-	for i := range s {
-		if len(stack) != 0 {
-			last := stack[len(stack)-1]
-			// [a b] B
-			if last-32 == s[i] || last+32 == s[i] {
+// in: [8,4,6,2,3]
+// out: [4,2,4,2,3]
+
+// проходимся и находимся наименьший объект справа, далее prices[i]-minElement
+// 8-4=4, 4-2=2, 6-2=4, 2, 3 - для у нет наименьшего правого - скидки нет.
+
+func finalPrices(prices []int) []int {
+
+	res := make([]int, len(prices))
+	copy(res, prices)
+	stack := []int{}
+
+	for i, currentPrice := range prices {
+		for len(stack) > 0 {
+			lastIdx := stack[len(stack)-1]
+			lastPrice := prices[lastIdx]
+			if lastPrice >= currentPrice {
+				res[lastIdx] = lastPrice - currentPrice
 				stack = stack[:len(stack)-1]
-				continue
+			} else {
+				break
 			}
 		}
-		stack = append(stack, s[i])
+		stack = append(stack, i)
 	}
-	return string(stack)
+	return res
 }
