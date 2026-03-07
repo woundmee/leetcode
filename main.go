@@ -1,44 +1,38 @@
 package main
 
-import "fmt"
+import (
+	"math"
+)
 
-// problem --> https://neetcode.io/problems/is-subsequence/
+// problem --> https://neetcode.io/problems/score-of-a-string/
+
+// Input: s = "code"
+// Output: 24
+
+// c=99, o=111, d=100, e=101
+// |111 - 99| + |100 - 111| + |101 - 100| = 24
 
 func main() {
-	// isSubsequence("node", "neetcode")
-	isSubsequence("abc", "aabbcc")
+
+	scoreOfString("code")
+	scoreOfString("neetcode")
 }
 
-// Input: s = "node", t = "neetcode"
-// Output: true
-
-// если строка 's' является последовательностью строки 't', то вернуть true
-// строка последовательна, если все буквы из 's' идут попорядку в 't', пример:
-// s=asec, t=asneg, в 't' есть только ase, которые идут попорядку
-
-func isSubsequence(s string, t string) bool {
-
-	// s=abc   t=aabbcc
-	//    ^       ^
-	// res=a
-
-	if len(s) == 0 {
-		return true
+func scoreOfString(s string) int {
+	if len(s) < 2 {
+		return 0
 	}
 
-	leftOne := 0
-	res := make([]byte, len(s))
-	for i := range t {
-		if s[leftOne] == t[i] && res[leftOne] != t[i] {
-			res[leftOne] = t[i]
-			leftOne++
-			if string(res) == s {
-				return true
-			}
+	var res float64
+	right := 1
+
+	for left := range s {
+		sub := math.Abs(float64(s[right]) - float64(s[left]))
+		right++
+		res += sub
+		if right == len(s) {
+			break
 		}
 	}
-
-	fmt.Println(string(res))
-	// fmt.Println(s == res)
-	return s == string(res)
+	return int(res)
 }
