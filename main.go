@@ -3,28 +3,35 @@ package main
 import "fmt"
 
 func main() {
-	res := searchInsert([]int{1, 3, 5, 6}, 2)
+	res := guessNumber(10)
 	fmt.Println(res)
 }
 
-// problem --> https://neetcode.io/problems/search-insert-position/
+// problem --> https://neetcode.io/problems/guess-number-higher-or-lower
 
-// дается массив и target. Нужно вернуть индекс таргета, а если таркет отсутствует в списке,
-// то нужно вернут индекс, куда этот target был бы вставлен.
+// функция guess возврващет 0, -1 или 1, где 0 - совпадение, -1 - загаданная цифра меньше текущего, 1 - выше текущего.
 
-func searchInsert(nums []int, target int) int {
-	left, right := 0, len(nums)-1
+func guess(num int) int // дается системой
+
+func guessNumber(n int) int {
+
+	left, right := 0, n
 
 	for left <= right {
+
 		mid := left + (right-left)/2
+		res := guess(mid)
+
 		switch {
-		case nums[mid] == target:
+		case res == 0:
 			return mid
-		case nums[mid] < target:
+		case res == 1:
 			left = mid + 1
-		case nums[mid] > target:
+		case res == -1:
 			right = mid - 1
 		}
+
 	}
-	return left
+
+	return -1
 }
