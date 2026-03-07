@@ -1,36 +1,29 @@
 package main
 
-import (
-	"strings"
-)
+import "fmt"
 
-// problem --> https://leetcode.com/problems/reverse-words-in-a-string-iii/
+// problem --> https://neetcode.io/problems/replace-elements-with-greatest-element-on-right-side/
 
 func main() {
-	reverseWords("Let's take LeetCode contest")
+	replaceElements([]int{2, 4, 5, 3, 1, 2})
 }
 
-// Input: s = "Let's take LeetCode contest"
-// Output: "s'teL ekat edoCteeL tsetnoc"
+// Input: arr = [2,4,5,3,1,2]
+// Output: [5,5,3,2,2,-1]
 
-// перевернуть каждое слово так, чтобы сохранились символы, проблемы.
-// решается 2-умя указателями.
+// заменить текущеий элемент самым большим элементом справа, а последний заменить на -1.
+func replaceElements(arr []int) []int {
 
-// ok: сохранить в telegram
+	maxRight := -1
+	for i := len(arr) - 1; i >= 0; i-- {
+		curr := arr[i]
+		arr[i] = maxRight
 
-func reverseWords(s string) string {
-
-	words := strings.Fields(s)
-	res := []byte{}
-
-	for i := range words {
-		right := len(words[i]) - 1
-		for right >= 0 {
-			res = append(res, words[i][right])
-			right--
+		if curr > maxRight {
+			maxRight = curr
 		}
-		res = append(res, ' ')
 	}
 
-	return string(res[:len(res)-1])
+	fmt.Println(arr)
+	return arr
 }
