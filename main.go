@@ -3,34 +3,31 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println(longestCommonPrefix([]string{"bat", "bag", "bank", "band"}))
+	res := search([]int{-1, 0, 2, 4, 6, 8}, 4)
+	fmt.Println(res)
 }
 
-// problem --> https://neetcode.io/problems/longest-common-prefix/
+// problem --> https://neetcode.io/problems/binary-search/
 
-// Input: strs = ["bat","bag","bank","band"]
-// Output: "ba"
+// необходимо реализовать простую функцию для бинарного поиска
+// если target отсутствует, вернуть -1
 
-// найти самое длинное вхождение букв. Если хоть в одном слове будет несовпадение, вхождение считается по минимому:
-// пример: ["tat", "tato", "task", "tatpool"]  --> макс вхождение = ta
+func search(nums []int, target int) int {
 
-func longestCommonPrefix(strs []string) string {
-	if len(strs) == 0 {
-		return ""
-	}
+	left, right := 0, len(nums)-1
 
-	// ["bat","bag","bank","band"]
-	//   ^
+	for left <= right {
+		mid := left + (right-left)/2 // note: запомни эту формулу
 
-	for i := range strs[0] {
-		char := strs[0][i]
-
-		for j := range len(strs) {
-			if i == len(strs[j]) || char != strs[j][i] {
-				return strs[0][:i]
-			}
+		switch {
+		case nums[mid] == target:
+			return nums[mid]
+		case nums[mid] < target:
+			left = mid + 1
+		case nums[mid] > target:
+			right = mid - 1
 		}
 	}
 
-	return strs[0]
+	return -1
 }
