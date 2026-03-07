@@ -7,23 +7,18 @@ type ListNode struct {
 	Next *ListNode
 }
 
-// problem —> https://neetcode.io/problems/remove-linked-list-elements/
-// удалить все вхождения val
+// problem —> https://leetcode.com/problems/remove-duplicates-from-sorted-list/
+// удалить все дубликаты в списке
+// in: [1 1 2 2 3 3 4]
+// out: [1 2 3 4]
 
-func removeElements(head *ListNode, val int) *ListNode {
-
-	// удаляю все совпадающие головы
-	for head != nil && head.Val == val {
-		head = head.Next
-	}
-
-	// удаляю совпадающие узлы
+func deleteDuplicates(head *ListNode) *ListNode {
 	curr := head
 	for curr != nil && curr.Next != nil {
-		if curr.Next.Val == val {
+		if curr.Val == curr.Next.Val {
 			curr.Next = curr.Next.Next
 		} else {
-			curr = curr.Next // move
+			curr = curr.Next
 		}
 	}
 	return head
