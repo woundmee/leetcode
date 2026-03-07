@@ -2,28 +2,43 @@ package main
 
 import "fmt"
 
-// problem --> https://neetcode.io/problems/replace-elements-with-greatest-element-on-right-side/
+// problem --> https://neetcode.io/problems/is-subsequence/
 
 func main() {
-	replaceElements([]int{2, 4, 5, 3, 1, 2})
+	// isSubsequence("node", "neetcode")
+	isSubsequence("abc", "aabbcc")
 }
 
-// Input: arr = [2,4,5,3,1,2]
-// Output: [5,5,3,2,2,-1]
+// Input: s = "node", t = "neetcode"
+// Output: true
 
-// заменить текущеий элемент самым большим элементом справа, а последний заменить на -1.
-func replaceElements(arr []int) []int {
+// если строка 's' является последовательностью строки 't', то вернуть true
+// строка последовательна, если все буквы из 's' идут попорядку в 't', пример:
+// s=asec, t=asneg, в 't' есть только ase, которые идут попорядку
 
-	maxRight := -1
-	for i := len(arr) - 1; i >= 0; i-- {
-		curr := arr[i]
-		arr[i] = maxRight
+func isSubsequence(s string, t string) bool {
 
-		if curr > maxRight {
-			maxRight = curr
+	// s=abc   t=aabbcc
+	//    ^       ^
+	// res=a
+
+	if len(s) == 0 {
+		return true
+	}
+
+	leftOne := 0
+	res := make([]byte, len(s))
+	for i := range t {
+		if s[leftOne] == t[i] && res[leftOne] != t[i] {
+			res[leftOne] = t[i]
+			leftOne++
+			if string(res) == s {
+				return true
+			}
 		}
 	}
 
-	fmt.Println(arr)
-	return arr
+	fmt.Println(string(res))
+	// fmt.Println(s == res)
+	return s == string(res)
 }
