@@ -5,34 +5,39 @@ import (
 )
 
 func main() {
-	res := isPerfectSquare(15)
+	// res := findPeakElement([]int{1, 2, 3, 1})
+	// res := findPeakElement([]int{1, 2, 1, 3, 4, 5, 0})
+	// res := findPeakElement([]int{1, 2, 3})
+	// res := findPeakElement([]int{1, 2})
+	res := findPeakElement([]int{3, 2, 1})
 	fmt.Println(res)
 }
 
-// problem --> https://neetcode.io/problems/valid-perfect-square/
+// problem --> https://neetcode.io/problems/find-peak-element/
 
-// дается положительно число, нужно вернуть полный ее квадрат.
-// Полный квадрат - это произведение числа на саму себя, например, полный квадрат для 16 - это 4, потому 4*4=16
-// для 15 полного квадрата нет, поэтому вернем false
-// нельзя использовать встроенный math.sqrt()
+// in: [1,2,1,3,4,5,0]
+// out: 5 (index)
 
-func isPerfectSquare(num int) bool {
+// найти пиковый элемент в массиве и вернуть его индекс.
+// пиковый - это когда элемент слева и справа от него меньше него самого
 
-	left, right := 0, num
+func findPeakElement(nums []int) int {
 
-	for left <= right {
+	left, right := 0, len(nums)-1
+
+	// [1 2 3 1]
+	//    ^
+
+	for left < right {
 		mid := left + (right-left)/2
-
-		square := mid * mid
-		fmt.Println("square =", square)
-
-		if square == num {
-			return true
-		} else if square < num {
+		if mid > 0 && nums[mid] > nums[mid-1] && nums[mid] > nums[mid+1] {
+			return mid
+		} else if nums[mid] < nums[mid+1] {
 			left = mid + 1
 		} else {
 			right = mid - 1
 		}
 	}
-	return false
+
+	return left
 }
