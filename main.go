@@ -1,38 +1,33 @@
 package main
 
-import (
-	"math"
-)
-
-// problem --> https://neetcode.io/problems/score-of-a-string/
-
-// Input: s = "code"
-// Output: 24
-
-// c=99, o=111, d=100, e=101
-// |111 - 99| + |100 - 111| + |101 - 100| = 24
-
 func main() {
-
-	scoreOfString("code")
-	scoreOfString("neetcode")
+	findMaxConsecutiveOnes([]int{1, 1, 0, 1, 1, 1})
 }
 
-func scoreOfString(s string) int {
-	if len(s) < 2 {
-		return 0
-	}
+// problem --> https://neetcode.io/problems/max-consecutive-ones/
 
-	var res float64
-	right := 1
+// Input: nums = [1,1,0,1,1,1]
+// Output: 3
 
-	for left := range s {
-		sub := math.Abs(float64(s[right]) - float64(s[left]))
-		right++
-		res += sub
-		if right == len(s) {
-			break
+// вернуть максимальное кол-во последовательных 1
+
+func findMaxConsecutiveOnes(nums []int) int {
+
+	// [1,0,1,0,1,0,1]
+	//    ^
+	// res=1 count=0
+
+	var max, count int
+
+	for _, num := range nums {
+		if num == 1 {
+			count++
+			if count > max {
+				max = count
+			}
+		} else {
+			count = 0
 		}
 	}
-	return int(res)
+	return max
 }
