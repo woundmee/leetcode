@@ -1,37 +1,38 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
-	res := guessNumber(10)
+	res := isPerfectSquare(15)
 	fmt.Println(res)
 }
 
-// problem --> https://neetcode.io/problems/guess-number-higher-or-lower
+// problem --> https://neetcode.io/problems/valid-perfect-square/
 
-// функция guess возврващет 0, -1 или 1, где 0 - совпадение, -1 - загаданная цифра меньше текущего, 1 - выше текущего.
+// дается положительно число, нужно вернуть полный ее квадрат.
+// Полный квадрат - это произведение числа на саму себя, например, полный квадрат для 16 - это 4, потому 4*4=16
+// для 15 полного квадрата нет, поэтому вернем false
+// нельзя использовать встроенный math.sqrt()
 
-func guess(num int) int // дается системой
+func isPerfectSquare(num int) bool {
 
-func guessNumber(n int) int {
-
-	left, right := 0, n
+	left, right := 0, num
 
 	for left <= right {
-
 		mid := left + (right-left)/2
-		res := guess(mid)
 
-		switch {
-		case res == 0:
-			return mid
-		case res == 1:
+		square := mid * mid
+		fmt.Println("square =", square)
+
+		if square == num {
+			return true
+		} else if square < num {
 			left = mid + 1
-		case res == -1:
+		} else {
 			right = mid - 1
 		}
-
 	}
-
-	return -1
+	return false
 }
