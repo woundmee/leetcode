@@ -1,37 +1,30 @@
 package main
 
-// problem --> https://leetcode.com/problems/apply-operations-to-an-array/
+// problem --> https://leetcode.com/problems/backspace-string-compare/
 
 func main() {
-	// applyOperations([]int{1, 2, 2, 1, 1, 0})
-	applyOperations([]int{847, 847, 0, 0, 0, 399, 416, 416, 879, 879, 206, 206, 206, 272})
+	// backspaceCompare("abcde##", "abcde##")
+	backspaceCompare("ab##", "c#d#")
 }
 
-// in:	[1,2,2,1,1,0]
-// out:	[1,4,2,0,0,0]
+// in -->  s1: "ab#c"  s2: "ah#c"
+// out -->  true
 
-// если соседние элементы равны (i == i+1), тогда i умножаем на 2 и записываем
-// вместо него новый результат, а в i+1 записываем 0.
-// в конце просто сдвигаем все нули в конец
+// цель: удалить символы '#' и те, которые идут до них
 
-func applyOperations(nums []int) []int {
+func backspaceCompare(s string, t string) bool {
+	return checkSymbol(s) == checkSymbol(t)
+}
 
-	// step #1
-	for i := 0; i < len(nums)-1; i++ {
-		if nums[i] == nums[i+1] {
-			nums[i] *= 2
-			nums[i+1] = 0
+func checkSymbol(str string) string {
+	stack := make([]byte, 0, len(str))
+
+	for i := 0; i < len(str); i++ {
+		if str[i] != '#' {
+			stack = append(stack, str[i])
+		} else if len(stack) > 0 {
+			stack = stack[:len(stack)-1]
 		}
 	}
-
-	// step #2
-	left := 0
-	for right := range nums {
-		if nums[right] != 0 {
-			nums[left], nums[right] = nums[right], nums[left]
-			left++
-		}
-	}
-
-	return nums
+	return string(stack)
 }
