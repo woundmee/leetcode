@@ -1,33 +1,36 @@
 package main
 
+import "fmt"
+
 func main() {
-	findMaxConsecutiveOnes([]int{1, 1, 0, 1, 1, 1})
+	fmt.Println(longestCommonPrefix([]string{"bat", "bag", "bank", "band"}))
 }
 
-// problem --> https://neetcode.io/problems/max-consecutive-ones/
+// problem --> https://neetcode.io/problems/longest-common-prefix/
 
-// Input: nums = [1,1,0,1,1,1]
-// Output: 3
+// Input: strs = ["bat","bag","bank","band"]
+// Output: "ba"
 
-// вернуть максимальное кол-во последовательных 1
+// найти самое длинное вхождение букв. Если хоть в одном слове будет несовпадение, вхождение считается по минимому:
+// пример: ["tat", "tato", "task", "tatpool"]  --> макс вхождение = ta
 
-func findMaxConsecutiveOnes(nums []int) int {
+func longestCommonPrefix(strs []string) string {
+	if len(strs) == 0 {
+		return ""
+	}
 
-	// [1,0,1,0,1,0,1]
-	//    ^
-	// res=1 count=0
+	// ["bat","bag","bank","band"]
+	//   ^
 
-	var max, count int
+	for i := range strs[0] {
+		char := strs[0][i]
 
-	for _, num := range nums {
-		if num == 1 {
-			count++
-			if count > max {
-				max = count
+		for j := range len(strs) {
+			if i == len(strs[j]) || char != strs[j][i] {
+				return strs[0][:i]
 			}
-		} else {
-			count = 0
 		}
 	}
-	return max
+
+	return strs[0]
 }
