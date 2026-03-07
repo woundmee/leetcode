@@ -3,31 +3,28 @@ package main
 import "fmt"
 
 func main() {
-	res := search([]int{-1, 0, 2, 4, 6, 8}, 4)
+	res := searchInsert([]int{1, 3, 5, 6}, 2)
 	fmt.Println(res)
 }
 
-// problem --> https://neetcode.io/problems/binary-search/
+// problem --> https://neetcode.io/problems/search-insert-position/
 
-// необходимо реализовать простую функцию для бинарного поиска
-// если target отсутствует, вернуть -1
+// дается массив и target. Нужно вернуть индекс таргета, а если таркет отсутствует в списке,
+// то нужно вернут индекс, куда этот target был бы вставлен.
 
-func search(nums []int, target int) int {
-
+func searchInsert(nums []int, target int) int {
 	left, right := 0, len(nums)-1
 
 	for left <= right {
-		mid := left + (right-left)/2 // note: запомни эту формулу
-
+		mid := left + (right-left)/2
 		switch {
 		case nums[mid] == target:
-			return nums[mid]
+			return mid
 		case nums[mid] < target:
 			left = mid + 1
 		case nums[mid] > target:
 			right = mid - 1
 		}
 	}
-
-	return -1
+	return left
 }
