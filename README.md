@@ -1,2 +1,2 @@
 # leetcode
-Хранилище задач из LeetCode. 
+Хранилище задач из LeetCode.
