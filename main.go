@@ -1,7 +1,5 @@
 package main
 
-import "math"
-
 func main() {}
 
 type TreeNode struct {
@@ -10,28 +8,27 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-// problem → https://neetcode.io/problems/balanced-binary-tree
-// задача: проверить баланс дерева. Если левая и правая часть сбалансирована — вернуть true.
-// дерево сбалансировано, если разница вычитания дает 0 или 1, а если > 1, то дисбаланс.
+// problem → https://neetcode.io/problems/same-binary-tree/
+// проверка эквивалентности левого поддерева правому.
 
-func isBalanced(root *TreeNode) bool {
-	return balance(root) != -1
-}
+// Пример:
+//  a)        b)
+//     1         1
+//    / \       / \
+//   2   3     2   3
 
-func balance(node *TreeNode) int {
-	if node == nil {
-		return 0
+// деревья a и b эквивалентны.
+
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+
+	if p == nil && q == nil {
+		return true
+	} else if (p == nil || q == nil) || (p.Val != q.Val) {
+		return false
 	}
 
-	left := balance(node.Left)
-	right := balance(node.Right)
+	left := isSameTree(p.Left, q.Left)
+	right := isSameTree(p.Right, q.Right)
 
-	if left == -1 || right == -1 {
-		return -1
-	}
-
-	if math.Abs(float64(left-right)) > 1 {
-		return -1
-	}
-	return max(left, right) + 1
+	return left && right
 }
