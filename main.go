@@ -8,27 +8,51 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-// problem → https://neetcode.io/problems/same-binary-tree/
-// проверка эквивалентности левого поддерева правому.
+// problem → https://neetcode.io/problems/subtree-of-a-binary-tree/
+// задача: проверить, является ли поддерево subTree поддеревом дерева root
+// пример:
+// Input: root = [1,2,3,4,5,null,null,6], subRoot = [2,4,5]
+// Output: false
 
-// Пример:
-//  a)        b)
-//     1         1
-//    / \       / \
-//   2   3     2   3
+// root:
+//         1
+//        / \
+//       2   3
+//      / \
+//     4   5
+//    /
+//   6
 
-// деревья a и b эквивалентны.
+// subRoot:
+//     2
+//    / \
+//   4   5
 
-func isSameTree(p *TreeNode, q *TreeNode) bool {
-
-	if p == nil && q == nil {
+func isSubtree(root *TreeNode, subRoot *TreeNode) bool {
+	if subRoot == nil {
 		return true
-	} else if (p == nil || q == nil) || (p.Val != q.Val) {
+	} else if root == nil {
 		return false
 	}
 
-	left := isSameTree(p.Left, q.Left)
-	right := isSameTree(p.Right, q.Right)
+	if isSameTree(root, subRoot) {
+		return true
+	}
 
+	return isSubtree(root, subRoot)
+}
+
+func isSameTree(root, sub *TreeNode) bool {
+
+	if root == nil && sub == nil {
+		return true
+	} else if root == nil || sub == nil {
+		return false
+	} else if root.Val != sub.Val {
+		return false
+	}
+
+	left := isSameTree(root.Left, sub.Left)
+	right := isSameTree(root.Right, sub.Right)
 	return left && right
 }
