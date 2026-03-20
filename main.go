@@ -8,35 +8,35 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-// problem → https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
-// задача: построить из отсортированного списка бинарное дерево
+// problem → https://neetcode.io/problems/range-sum-of-bst/
+// задача: посчитать сумму узлов, которые входят в заданных диапазон
 
-// in: [-10 -3 0 5 9]
-// дерево, которое должно получиться:
+// in: [5 3 8 1 4 7 9 nil 2], low=3, hight=8
+// out: 27
+// explanation: узлы 5 3 8 4 и 7 входят в диапазон, а их сумма = 27.
 
-//		0
-//	   / \
-//  -10   5
-//    \    \
-//    -3    9
+func rangeSumBST(root *TreeNode, low int, high int) int {
 
-// Это BST дерево, которое обладает полезными свойствами:
-// * левая часть меньше своего корня
-// * правая часть больше своего корня
-
-func sortedArrayToBST(nums []int) *TreeNode {
-
-	if len(nums) < 1 {
-		return nil
+	if root == nil {
+		return 0
 	}
 
-	// находим середину
-	mid := len(nums) / 2
+	var sum int
 
-	// формируем дерево
-	node := &TreeNode{Val: nums[mid]}
-	node.Left = sortedArrayToBST(nums[:mid])
-	node.Right = sortedArrayToBST(nums[mid+1:])
-	return node
+	// проверяю сначал сам корень
+	if root.Val >= low && root.Val <= high {
+		sum += root.Val
+	}
 
+	// проверяю левое поддерево
+	if root.Val > low {
+		sum += rangeSumBST(root.Left, low, high)
+	}
+
+	// проверяю правое поддерево
+	if root.Val < high {
+		sum += rangeSumBST(root.Right, low, high)
+	}
+
+	return sum
 }
