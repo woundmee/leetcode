@@ -8,51 +8,35 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-// problem → https://neetcode.io/problems/subtree-of-a-binary-tree/
-// задача: проверить, является ли поддерево subTree поддеревом дерева root
-// пример:
-// Input: root = [1,2,3,4,5,null,null,6], subRoot = [2,4,5]
-// Output: false
+// problem → https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+// задача: построить из отсортированного списка бинарное дерево
 
-// root:
-//         1
-//        / \
-//       2   3
-//      / \
-//     4   5
-//    /
-//   6
+// in: [-10 -3 0 5 9]
+// дерево, которое должно получиться:
 
-// subRoot:
-//     2
-//    / \
-//   4   5
+//		0
+//	   / \
+//  -10   5
+//    \    \
+//    -3    9
 
-func isSubtree(root *TreeNode, subRoot *TreeNode) bool {
-	if subRoot == nil {
-		return true
-	} else if root == nil {
-		return false
+// Это BST дерево, которое обладает полезными свойствами:
+// * левая часть меньше своего корня
+// * правая часть больше своего корня
+
+func sortedArrayToBST(nums []int) *TreeNode {
+
+	if len(nums) < 1 {
+		return nil
 	}
 
-	if isSameTree(root, subRoot) {
-		return true
-	}
+	// находим середину
+	mid := len(nums) / 2
 
-	return isSubtree(root, subRoot)
-}
+	// формируем дерево
+	node := &TreeNode{Val: nums[mid]}
+	node.Left = sortedArrayToBST(nums[:mid])
+	node.Right = sortedArrayToBST(nums[mid+1:])
+	return node
 
-func isSameTree(root, sub *TreeNode) bool {
-
-	if root == nil && sub == nil {
-		return true
-	} else if root == nil || sub == nil {
-		return false
-	} else if root.Val != sub.Val {
-		return false
-	}
-
-	left := isSameTree(root.Left, sub.Left)
-	right := isSameTree(root.Right, sub.Right)
-	return left && right
 }
