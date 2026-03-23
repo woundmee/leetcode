@@ -1,42 +1,45 @@
 package main
 
-func main() {}
+// problem -> https://neetcode.io/problems/valid-palindrome-ii/
+// задача: проверить текст на палиндром.
+// У тебя есть 1 попытка убрать букву (с левой или правой стороны)
 
-type TreeNode struct {
-	Val   int
-	Left  *TreeNode
-	Right *TreeNode
+// example: "addba" (можно убрать предпоследнюю букву и слово == палиндром)
+
+func main() {
+	// validPalindrome("acdccba")  // false
+	validPalindrome("abbda") // true
+	// validPalindrome("aguokepatgbnvfqmgmlcupuufxoohdfpgjdmysgvhmvffcnqxjjxqncffvmhvgsymdjgpfdhooxfuupuculmgmqfvnbgtapekouga")  // true
 }
 
-// problem → https://neetcode.io/problems/range-sum-of-bst/
-// задача: посчитать сумму узлов, которые входят в заданных диапазон
+func validPalindrome(s string) bool {
 
-// in: [5 3 8 1 4 7 9 nil 2], low=3, hight=8
-// out: 27
-// explanation: узлы 5 3 8 4 и 7 входят в диапазон, а их сумма = 27.
+	left := 0
+	right := len(s) - 1
 
-func rangeSumBST(root *TreeNode, low int, high int) int {
+	for left < right {
+		if s[left] != s[right] {
 
-	if root == nil {
-		return 0
+			l := ispal(s, left+1, right)
+			r := ispal(s, left, right-1)
+			return l || r
+
+		} else {
+			left++
+			right--
+		}
 	}
+	return true
+}
 
-	var sum int
-
-	// проверяю сначал сам корень
-	if root.Val >= low && root.Val <= high {
-		sum += root.Val
+func ispal(s string, left, right int) bool {
+	for left < right {
+		if s[left] != s[right] {
+			return false
+		} else {
+			left++
+			right--
+		}
 	}
-
-	// проверяю левое поддерево
-	if root.Val > low {
-		sum += rangeSumBST(root.Left, low, high)
-	}
-
-	// проверяю правое поддерево
-	if root.Val < high {
-		sum += rangeSumBST(root.Right, low, high)
-	}
-
-	return sum
+	return true
 }
