@@ -1,64 +1,50 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
-// problem -> https://neetcode.io/problems/products-of-array-discluding-self/
-// задача: вернуть массив, где каждый n[i] равна сумме остальных элементов массива (не включая самого себя).
+// problem -> https://neetcode.io/problems/anagram-groups/
+// задача: сгруппировать анаграммы
 
-// Input: nums = [1,2,4,6]
-// Output: [48,24,12,8]
-
-// example: input: [1 2 3 4]
-// output = [2*3*4, 1*3*4, 1*2*4, 1*2*3] = [24, 12, 8, 6]
+// Input: strs = ["act","pots","tops","cat","stop","hat"]
+// Output: [["hat"],["act", "cat"],["stop", "pots", "tops"]]
 
 func main() {
-	productExceptSelf([]int{1, 2, 3, 4})
-	// productExceptSelf([]int{-1, 0, 1, 2, 3})
+	// groupAnagrams([]string{"eat", "cat", "tea", "koko", "okko"})
+	groupAnagrams([]string{"act", "pots", "tops", "cat", "stop", "hat"})
 }
 
-// O(n)
-func productExceptSelf(nums []int) []int {
+func groupAnagrams(strs []string) [][]string {
 
-	if len(nums) < 1 {
-		return []int{}
+	var res [][]string
+
+	if len(strs) < 1 {
+		return res
 	}
 
-	res := make([]int, len(nums))
+	m := make(map[string][]string)
 
-	left := 1
-	for i := range nums {
-		res[i] = left
-		left *= nums[i]
+	for _, v := range strs {
+		s := sortString(v)
+		if _, ok := m[s]; ok {
+			m[s] = append(m[s], v)
+		} else {
+			m[s] = append(m[s], v)
+		}
 	}
 
-	right := 1
-	for i := len(nums) - 1; i >= 0; i-- {
-		res[i] *= right
-		right *= nums[i]
+	for _, v := range m {
+		res = append(res, v)
 	}
 
 	fmt.Println(res)
-
 	return res
 }
 
-// ===== O(n log n) ====== //
-// ====================== //
-// func productExceptSelf(nums []int) []int {
-// 	var res []int
-// 	numscopy := slices.Clone(nums)
-
-// 	for i := range nums {
-// 		var sum int = 1
-// 		for j := range numscopy {
-// 			if i == j {
-// 				continue
-// 			}
-// 			sum *= numscopy[j]
-// 		}
-// 		res = append(res, sum)
-// 	}
-
-// 	fmt.Println(res)
-// 	return res
-// }
+func sortString(s string) string {
+	r := []rune(s)
+	slices.Sort(r)
+	return string(r)
+}
