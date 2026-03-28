@@ -1,50 +1,64 @@
 package main
 
-import (
-	"slices"
-)
+import "fmt"
 
-// problem -> https://neetcode.io/problems/longest-consecutive-sequence/
-// задача: дан массив, вернуть самую длинную последовательность, которому можно составить в массиве
-// пример:
-// in: [0,3,2,5,4,6,1,1]
-// out: 7
-// максимальная последовательность: 0 1 2 3 4 5 6 (7 раз)
+// problem -> https://neetcode.io/problems/products-of-array-discluding-self/
+// задача: вернуть массив, где каждый n[i] равна сумме остальных элементов массива (не включая самого себя).
+
+// Input: nums = [1,2,4,6]
+// Output: [48,24,12,8]
+
+// example: input: [1 2 3 4]
+// output = [2*3*4, 1*3*4, 1*2*4, 1*2*3] = [24, 12, 8, 6]
 
 func main() {
-	longestConsecutive([]int{2, 20, 4, 10, 3, 4, 5})
-	// longestConsecutive([]int{0, 3, 2, 5, 4, 6, 1, 1})
-	// longestConsecutive([]int{2, 20, 4, 10, 3, 4, 5})
-	longestConsecutive([]int{9, 1, 4, 7, 3, -1, 0, 5, 8, -1, 6})
+	productExceptSelf([]int{1, 2, 3, 4})
+	// productExceptSelf([]int{-1, 0, 1, 2, 3})
 }
 
-func longestConsecutive(nums []int) int {
+// O(n)
+func productExceptSelf(nums []int) []int {
+
 	if len(nums) < 1 {
-		return 0
+		return []int{}
 	}
 
-	slices.Sort(nums)
+	res := make([]int, len(nums))
 
-	// 9,1,4,7,3,-1,0,5,8,-1,6
-	// -1 -1 0 1 3 4 5 6 7 8 9
-	//                       ^
-	// count=9
-
-	var count int = 1
-	counts := []int{}
-
-	for i := 1; i <= len(nums)-1; i++ {
-		if nums[i] == nums[i-1] {
-			continue
-		} else if nums[i]-1 != nums[i-1] {
-			counts = append(counts, count)
-			count = 0
-		}
-		count++
+	left := 1
+	for i := range nums {
+		res[i] = left
+		left *= nums[i]
 	}
 
-	counts = append(counts, count)
+	right := 1
+	for i := len(nums) - 1; i >= 0; i-- {
+		res[i] *= right
+		right *= nums[i]
+	}
 
-	println(slices.Max(counts))
-	return slices.Max(counts)
+	fmt.Println(res)
+
+	return res
 }
+
+// ===== O(n log n) ====== //
+// ====================== //
+// func productExceptSelf(nums []int) []int {
+// 	var res []int
+// 	numscopy := slices.Clone(nums)
+
+// 	for i := range nums {
+// 		var sum int = 1
+// 		for j := range numscopy {
+// 			if i == j {
+// 				continue
+// 			}
+// 			sum *= numscopy[j]
+// 		}
+// 		res = append(res, sum)
+// 	}
+
+// 	fmt.Println(res)
+// 	return res
+// }
