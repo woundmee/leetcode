@@ -1,50 +1,54 @@
 package main
 
-import (
-	"fmt"
-	"slices"
-)
+import "fmt"
 
-// problem -> https://neetcode.io/problems/anagram-groups/
-// задача: сгруппировать анаграммы
-
-// Input: strs = ["act","pots","tops","cat","stop","hat"]
-// Output: [["hat"],["act", "cat"],["stop", "pots", "tops"]]
-
+// problem -> https://neetcode.io/problems/design-hashset/
+// задача: релазиовать свои хеш-функции
 func main() {
-	// groupAnagrams([]string{"eat", "cat", "tea", "koko", "okko"})
-	groupAnagrams([]string{"act", "pots", "tops", "cat", "stop", "hat"})
+	m := MyHashSet{m: make(map[int]struct{})}
+	m.Add(1)
+	m.Add(2)
+	m.Add(3)
+
+	fmt.Println(m)
+
+	m.Remove(3)
+
+	fmt.Println(m)
 }
 
-func groupAnagrams(strs []string) [][]string {
-
-	var res [][]string
-
-	if len(strs) < 1 {
-		return res
-	}
-
-	m := make(map[string][]string)
-
-	for _, v := range strs {
-		s := sortString(v)
-		if _, ok := m[s]; ok {
-			m[s] = append(m[s], v)
-		} else {
-			m[s] = append(m[s], v)
-		}
-	}
-
-	for _, v := range m {
-		res = append(res, v)
-	}
-
-	fmt.Println(res)
-	return res
+type MyHashSet struct {
+	m map[int]struct{}
 }
 
-func sortString(s string) string {
-	r := []rune(s)
-	slices.Sort(r)
-	return string(r)
+func Constructor() MyHashSet {
+	return MyHashSet{
+		m: make(map[int]struct{}),
+	}
 }
+
+func (this *MyHashSet) Add(key int) {
+	if _, ok := this.m[key]; ok {
+		return
+	}
+	this.m[key] = struct{}{} // добавляем новый ключ
+}
+
+func (this *MyHashSet) Remove(key int) {
+	delete(this.m, key)
+}
+
+func (this *MyHashSet) Contains(key int) bool {
+	if _, ok := this.m[key]; ok {
+		return true
+	}
+	return false
+}
+
+/**
+ * Your MyHashSet object will be instantiated and called as such:
+ * obj := Constructor();
+ * obj.Add(key);
+ * obj.Remove(key);
+ * param_3 := obj.Contains(key);
+ */
