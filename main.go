@@ -2,33 +2,42 @@ package main
 
 import "fmt"
 
-// problem:	https://neetcode.io/problems/majority-element-ii/
-// task:	вернуть новый массив с числа, которые повторяются в исходном
-//			больше чем n/3, где n - длина массива.
-
-// notes
-// [5,2,3,2,2,2,2,5,5,5], n=10
-// n/3 = 3.3
-// out: [2, 5]
+// problem:	https://neetcode.io/problems/sort-colors/
+// task:	отсортировать "цвета" (в виде цифр). Применил тот же алгоритм - QuickSort.
 
 func main() {
-	majorityElement([]int{5, 2, 3, 2, 2, 2, 2, 5, 5, 5})
-	majorityElement([]int{1, 2, 3})
+	sortColors([]int{1, 0, 1, 2})
 }
 
-func majorityElement(nums []int) []int {
-	var res []int
-	m := make(map[int]int)
+func sortColors(nums []int) {
+	fmt.Println(nums)
+	quickSort(nums, 0, len(nums)-1)
+	fmt.Println(nums)
+}
 
-	for _, v := range nums {
-		m[v]++
-
-		if m[v] == len(nums)/3+1 {
-			res = append(res, v)
-		}
-
+func quickSort(nums []int, left, right int) {
+	if left >= right {
+		return
 	}
 
-	fmt.Println(res)
-	return res
+	pivot := nums[(left+right)/2]
+	i, j := left, right
+
+	for i <= j {
+		for pivot > nums[i] {
+			i++
+		}
+		for pivot < nums[j] {
+			j--
+		}
+
+		if i <= j {
+			nums[i], nums[j] = nums[j], nums[i]
+			i++
+			j--
+		}
+	}
+
+	quickSort(nums, left, j)
+	quickSort(nums, i, right)
 }
