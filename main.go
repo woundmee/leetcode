@@ -1,42 +1,34 @@
 package main
 
-// problem -> https://neetcode.io/problems/sort-an-array/
-// задача: отсортировать заданный массив. Использовал метод QuickSort
+import "fmt"
+
+// problem:	https://neetcode.io/problems/majority-element-ii/
+// task:	вернуть новый массив с числа, которые повторяются в исходном
+//			больше чем n/3, где n - длина массива.
+
+// notes
+// [5,2,3,2,2,2,2,5,5,5], n=10
+// n/3 = 3.3
+// out: [2, 5]
 
 func main() {
-	sortArray([]int{6, 2, 4, 1, 3, 5})
+	majorityElement([]int{5, 2, 3, 2, 2, 2, 2, 5, 5, 5})
+	majorityElement([]int{1, 2, 3})
 }
 
-func sortArray(nums []int) []int {
-	quickSort(nums, 0, len(nums)-1)
-	return nums
-}
+func majorityElement(nums []int) []int {
+	var res []int
+	m := make(map[int]int)
 
-func quickSort(nums []int, left, right int) {
+	for _, v := range nums {
+		m[v]++
 
-	if left >= right {
-		return
+		if m[v] == len(nums)/3+1 {
+			res = append(res, v)
+		}
+
 	}
 
-	pivot := nums[(left+right)/2]
-
-	i, j := left, right
-
-	for i <= j {
-		for pivot > nums[i] {
-			i++
-		}
-		for pivot < nums[j] {
-			j--
-		}
-		if i <= j {
-			nums[i], nums[j] = nums[j], nums[i]
-			i++
-			j--
-		}
-	}
-
-	quickSort(nums, left, j)
-	quickSort(nums, i, right)
-
+	fmt.Println(res)
+	return res
 }
