@@ -1,43 +1,37 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
-// problem:	https://neetcode.io/problems/sort-colors/
-// task:	отсортировать "цвета" (в виде цифр). Применил тот же алгоритм - QuickSort.
+// problem:	https://neetcode.io/problems/first-missing-positive/
+// level:	hard
+
+// task:	вернуть первый отсутствующий элемент в массиве (старт с 1)
 
 func main() {
-	sortColors([]int{1, 0, 1, 2})
+	// firstMissingPositive([]int{-2, -1, 0})
+	// firstMissingPositive([]int{1, 2, 4})
+	// firstMissingPositive([]int{1, 2, 4, 5, 6, 3, 1})
+	// firstMissingPositive([]int{1})
+	// firstMissingPositive([]int{1, 2, 3, 4, 5})
+	firstMissingPositive([]int{5, 4, 3, 2, 1})
 }
 
-func sortColors(nums []int) {
-	fmt.Println(nums)
-	quickSort(nums, 0, len(nums)-1)
-	fmt.Println(nums)
-}
+func firstMissingPositive(nums []int) int {
 
-func quickSort(nums []int, left, right int) {
-	if left >= right {
-		return
+	m := make(map[int]struct{}, len(nums))
+
+	for _, v := range nums {
+		m[v] = struct{}{}
 	}
 
-	pivot := nums[(left+right)/2]
-	i, j := left, right
-
-	for i <= j {
-		for pivot > nums[i] {
-			i++
-		}
-		for pivot < nums[j] {
-			j--
-		}
-
-		if i <= j {
-			nums[i], nums[j] = nums[j], nums[i]
-			i++
-			j--
+	for i := 1; i <= len(nums); i++ {
+		if _, ok := m[i]; !ok {
+			fmt.Println(i)
+			return i
 		}
 	}
 
-	quickSort(nums, left, j)
-	quickSort(nums, i, right)
+	return len(nums) + 1
 }
