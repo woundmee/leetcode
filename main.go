@@ -1,37 +1,32 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
-// problem:	https://neetcode.io/problems/first-missing-positive/
-// level:	hard
+// problem:	https://neetcode.io/problems/merge-sorted-array/
+// level:	easy
 
-// task:	вернуть первый отсутствующий элемент в массиве (старт с 1)
+// task:	расставить цифры из nums2 в nums1 по порядку (на свои места). Массивы отсортированы.
 
 func main() {
-	// firstMissingPositive([]int{-2, -1, 0})
-	// firstMissingPositive([]int{1, 2, 4})
-	// firstMissingPositive([]int{1, 2, 4, 5, 6, 3, 1})
-	// firstMissingPositive([]int{1})
-	// firstMissingPositive([]int{1, 2, 3, 4, 5})
-	firstMissingPositive([]int{5, 4, 3, 2, 1})
+	merge([]int{10, 20, 20, 40, 0, 0}, 4, []int{1, 2}, 2)
+	// merge([]int{0, 0}, 0, []int{1, 2}, 2)
+	// merge([]int{1, 2, 3, 4, 0, 0}, 4, []int{5, 6}, 2)
+
 }
 
-func firstMissingPositive(nums []int) int {
+func merge(nums1 []int, m int, nums2 []int, n int) {
 
-	m := make(map[int]struct{}, len(nums))
+	i, j, l := m-1, n-1, m+n-1
 
-	for _, v := range nums {
-		m[v] = struct{}{}
-	}
-
-	for i := 1; i <= len(nums); i++ {
-		if _, ok := m[i]; !ok {
-			fmt.Println(i)
-			return i
+	for j >= 0 {
+		if i >= 0 && nums1[i] > nums2[j] {
+			nums1[l] = nums1[i]
+			i--
+		} else {
+			nums1[l] = nums2[j]
+			j--
 		}
+		l--
 	}
-
-	return len(nums) + 1
+	fmt.Println(nums1)
 }
