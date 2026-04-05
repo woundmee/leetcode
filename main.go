@@ -2,31 +2,43 @@ package main
 
 import "fmt"
 
-// problem:	https://neetcode.io/problems/merge-sorted-array/
-// level:	easy
+// problem:	https://neetcode.io/problems/rotate-array/
+// level:	medium
 
-// task:	расставить цифры из nums2 в nums1 по порядку (на свои места). Массивы отсортированы.
+// task: 	дан массив, необходимо его перевернуть k-раз. Если к > len(nums), то k %= len(nums)
+// 			Input: nums = [1,2,3,4,5,6,7,8], k = 4
+// 			Output: [5,6,7,8,1,2,3,4]
+
+// 			Пояснение:
+// 			поворот на 1 шаг вправо: [8,1,2,3,4,5,6,7]
+// 			поворот на 2 шага вправо: [7,8,1,2,3,4,5,6]
+// 			поворот на 3 шага вправо: [6,7,8,1,2,3,4,5]
+// 			поворот на 4 шага вправо: [5,6,7,8,1,2,3,4]
 
 func main() {
-	merge([]int{10, 20, 20, 40, 0, 0}, 4, []int{1, 2}, 2)
-	// merge([]int{0, 0}, 0, []int{1, 2}, 2)
-	// merge([]int{1, 2, 3, 4, 0, 0}, 4, []int{5, 6}, 2)
-
+	// rotate([]int{1, 2, 3, 4, 5, 6, 7, 8}, 4)
+	rotate([]int{1, 2, 3, 4, 5}, 7)
 }
 
-func merge(nums1 []int, m int, nums2 []int, n int) {
+// это решение является более оптимальным,
+// чем просто написать: nums = append(nums[l:], nums[:l]...)
+// решение в одну строку, правда создается новый массив, а решение ниже оптимально тем,
+// что меняю исходный на месте (in-place), не создавая новый массив (как при append)
 
-	i, j, l := m-1, n-1, m+n-1
-
-	for j >= 0 {
-		if i >= 0 && nums1[i] > nums2[j] {
-			nums1[l] = nums1[i]
-			i--
-		} else {
-			nums1[l] = nums2[j]
-			j--
-		}
-		l--
+func rotate(nums []int, k int) {
+	if len(nums) <= k {
+		k %= len(nums)
 	}
-	fmt.Println(nums1)
+	reverse(nums, 0, len(nums)-1)
+	reverse(nums, 0, k-1)
+	reverse(nums, k, len(nums)-1)
+	fmt.Println(nums)
+}
+
+func reverse(nums []int, l, r int) {
+	for l <= r {
+		nums[l], nums[r] = nums[r], nums[l]
+		l++
+		r--
+	}
 }
