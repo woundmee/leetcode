@@ -1,38 +1,43 @@
 package main
 
-import "fmt"
-
-// problem:
+// problem:	https://neetcode.io/problems/max-water-container/
 // level:	medium
 
-// task:	дается отсортированный массив и K-тый элемент.
-// 			Вернуть массив индексов, числа которых в сумме дают К. Индексы вернуться, начиная с 1, а не 0.
-
-//			[2 6 7 8 10 40 50], target=15
-//			out: [3 4] (3-ий индекс == 7, 4-ый == 8), 7+8=15
+// task:	Площадь = длина*ширина (S=L*W) -> для прямоугольных
+//			для круга (бассейн) -> pi*r*r (r - радиус круга)
+//			найти 2 линии, которые дают max(min(height[i], height[j]) * (j - i))
+//
+//
+//
 
 func main() {
-	twoSum([]int{3, 6, 10, 12, 15, 17, 20}, 25)
-	// twoSum([]int{1, 2, 3, 4}, 3)
+	maxArea([]int{1, 7, 2, 5, 4, 7, 3, 6})
 }
 
-func twoSum(numbers []int, target int) []int {
+func maxArea(heights []int) int {
+	var res int
 
-	left, right := 0, len(numbers)-1
+	i, j := 0, len(heights)-1
 
-	for left < right {
-		sum := numbers[left] + numbers[right]
+	for i <= j {
+		w := abs(j - i)
+		h := min(heights[i], heights[j])
+		s := h * w
+		res = max(res, s)
 
-		switch {
-		case sum == target:
-			fmt.Println([]int{left + 1, right + 1})
-			return []int{left + 1, right + 1}
-		case sum > target:
-			right--
-		case sum < target:
-			left++
+		if heights[i] < heights[j] {
+			i++
+		} else {
+			j--
 		}
 	}
 
-	return []int{}
+	return res
+}
+
+func abs(a int) int {
+	if a < 0 {
+		return a * -1
+	}
+	return a
 }
