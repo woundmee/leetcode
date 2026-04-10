@@ -1,32 +1,78 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
-// problem:	https://neetcode.io/problems/merge-sorted-array/
-// level:	easy
+// problem:	https://neetcode.io/problems/evaluate-reverse-polish-notation
+// level:	medium
 
-// task:	расставить цифры из nums2 в nums1 по порядку (на свои места). Массивы отсортированы.
+// task:	Вам дан массив строковых токенов, представляющих допустимое
+// 			арифметическое выражение в обратной польской нотации.
 
 func main() {
-	merge([]int{10, 20, 20, 40, 0, 0}, 4, []int{1, 2}, 2)
-	// merge([]int{0, 0}, 0, []int{1, 2}, 2)
-	// merge([]int{1, 2, 3, 4, 0, 0}, 4, []int{5, 6}, 2)
-
+	res := evalRPN([]string{"1", "2", "+", "3", "*", "4", "-"})
+	fmt.Println(res)
 }
 
-func merge(nums1 []int, m int, nums2 []int, n int) {
+// ["1","2","+","3","*","4","-"]
+// out = ((1+2)*3)-4=9-4 = 5
 
-	i, j, l := m-1, n-1, m+n-1
+// tokens=["4","13","5","/","+"]
+// out = 6
 
-	for j >= 0 {
-		if i >= 0 && nums1[i] > nums2[j] {
-			nums1[l] = nums1[i]
-			i--
+func evalRPN(tokens []string) int {
+
+	stack := make([]int, 0)
+
+	for _, v := range tokens {
+		dig, err := strconv.Atoi(v)
+
+		if err == nil {
+			stack = append(stack, dig)
 		} else {
-			nums1[l] = nums2[j]
-			j--
+			operations(&stack, v)
 		}
-		l--
+
 	}
-	fmt.Println(nums1)
+
+	return stack[0]
 }
+
+func operations(stack *[]int, oper string) {
+	switch oper {
+	case "+":
+		last := pop(stack)
+		penult := pop(stack)
+		*stack = append(*stack, last+penult)
+	case "-":
+		last := pop(stack)
+		penult := pop(stack)
+		*stack = append(*stack, penult-last)
+	case "*":
+		last := pop(stack)
+		penult := pop(stack)
+		*stack = append(*stack, last*penult)
+	case "/":
+		last := pop(stack)
+		penult := pop(stack)
+		*stack = append(*stack, penult/last)
+	}
+	fmt.Println(*stack)
+}
+
+// через указатель
+func pop(stack *[]int) int {
+	s := *stack
+	removed := s[len(*stack)-1]
+	*stack = s[:len(*stack)-1]
+	return removed
+}
+
+// // копированием
+// func pop(stack []int) (int, []int) {
+// 	last := stack[len(stack)-1]
+// 	newStack := stack[:len(stack)-1]
+// 	return last, newStack
+// }
