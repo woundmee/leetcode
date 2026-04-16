@@ -1,78 +1,62 @@
 package main
 
 import (
-	"fmt"
-	"strconv"
+	"strings"
+	"unicode"
 )
 
-// problem:	https://neetcode.io/problems/evaluate-reverse-polish-notation
+// problem:	https://neetcode.io/problems/decode-string/
 // level:	medium
 
-// task:	Вам дан массив строковых токенов, представляющих допустимое
-// 			арифметическое выражение в обратной польской нотации.
+// task:	дана закондированная строка по шаблону k[string], где string необходимо повторить k-раз
+//			пример: дана строка 2[a3[b]]c, на выходе: abbbabbbc
 
 func main() {
-	res := evalRPN([]string{"1", "2", "+", "3", "*", "4", "-"})
-	fmt.Println(res)
+	decodeString("2[a3[b]]c") // --> abbbabbbc
 }
 
-// ["1","2","+","3","*","4","-"]
-// out = ((1+2)*3)-4=9-4 = 5
+func decodeString(s string) string {
 
-// tokens=["4","13","5","/","+"]
-// out = 6
+	letters := []string{}
+	nums := []int{}
 
-func evalRPN(tokens []string) int {
+	currLetter := ""
+	currNum := 0
 
-	stack := make([]int, 0)
+	for _, v := range s {
 
-	for _, v := range tokens {
-		dig, err := strconv.Atoi(v)
+		if unicode.IsLetter(v) {
+			currLetter += string(v)
+		} else if unicode.IsDigit(v) {
 
-		if err == nil {
-			stack = append(stack, dig)
+			// т.к. цифры могут идти рядом друг с другом, пример ..a12[b]..,
+			// 12 он будет считать отдельно по цифрам, как 1, 2 и тд, а нам нужно получить 12,
+			// чтобы повторить 12 раз, поэтому это простой способ до 99 сконвертить в десятичный формат
+			currNum = currNum*10 + int(v-'0')
 		} else {
-			operations(&stack, v)
+			// если скобки
+			switch v {
+			case '[':
+				letters = append(letters, currLetter)
+				nums = append(nums, currNum)
+				currLetter = ""
+				currNum = 0
+
+			case ']':
+				k := pop(&nums)
+				prev := pop(&letters)
+				curr := currLetter
+				currLetter = prev + strings.Repeat(curr, k)
+			}
 		}
 
 	}
 
-	return stack[0]
+	return currLetter
 }
 
-func operations(stack *[]int, oper string) {
-	switch oper {
-	case "+":
-		last := pop(stack)
-		penult := pop(stack)
-		*stack = append(*stack, last+penult)
-	case "-":
-		last := pop(stack)
-		penult := pop(stack)
-		*stack = append(*stack, penult-last)
-	case "*":
-		last := pop(stack)
-		penult := pop(stack)
-		*stack = append(*stack, last*penult)
-	case "/":
-		last := pop(stack)
-		penult := pop(stack)
-		*stack = append(*stack, penult/last)
-	}
-	fmt.Println(*stack)
+func pop[T any](stack *[]T) T {
+	last := (*stack)[len(*stack)-1]
+	*stack = (*stack)[:len(*stack)-1]
+	return last
 }
-
-// через указатель
-func pop(stack *[]int) int {
-	s := *stack
-	removed := s[len(*stack)-1]
-	*stack = s[:len(*stack)-1]
-	return removed
-}
-
-// // копированием
-// func pop(stack []int) (int, []int) {
-// 	last := stack[len(stack)-1]
-// 	newStack := stack[:len(stack)-1]
-// 	return last, newStack
-// }
