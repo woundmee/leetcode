@@ -1,62 +1,38 @@
 package main
 
-import (
-	"strings"
-	"unicode"
-)
-
-// problem:	https://neetcode.io/problems/decode-string/
+// problem:	https://neetcode.io/problems/daily-temperatures/
 // level:	medium
 
-// task:	дана закондированная строка по шаблону k[string], где string необходимо повторить k-раз
-//			пример: дана строка 2[a3[b]]c, на выходе: abbbabbbc
+// task:	дан массив температур. Вернуть такой же массив, где будут цифры, указывающие
+//			сколько детей до потепления. Пример: [30,38,30,36,35,40,28], на выходе: [1 4 1 2 1 0 0]
+//			Объяснение:	1) 1-ый день = 30, следующее потепление = 38, разница 1
+//						2) 2-ой день = 38, следующее потепление = 40, разница 4 и тд.
 
 func main() {
-	decodeString("2[a3[b]]c") // --> abbbabbbc
+	dailyTemperatures([]int{30, 38, 30, 36, 35, 40, 28})
+	dailyTemperatures([]int{22, 21, 20})
 }
 
-func decodeString(s string) string {
+// [30,38,30,36,35,40,28]
+//                    ^
+//  [1 4 1 2 1 0 0]
 
-	letters := []string{}
-	nums := []int{}
-
-	currLetter := ""
-	currNum := 0
-
-	for _, v := range s {
-
-		if unicode.IsLetter(v) {
-			currLetter += string(v)
-		} else if unicode.IsDigit(v) {
-
-			// т.к. цифры могут идти рядом друг с другом, пример ..a12[b]..,
-			// 12 он будет считать отдельно по цифрам, как 1, 2 и тд, а нам нужно получить 12,
-			// чтобы повторить 12 раз, поэтому это простой способ до 99 сконвертить в десятичный формат
-			currNum = currNum*10 + int(v-'0')
-		} else {
-			// если скобки
-			switch v {
-			case '[':
-				letters = append(letters, currLetter)
-				nums = append(nums, currNum)
-				currLetter = ""
-				currNum = 0
-
-			case ']':
-				k := pop(&nums)
-				prev := pop(&letters)
-				curr := currLetter
-				currLetter = prev + strings.Repeat(curr, k)
-			}
-		}
-
+func dailyTemperatures(temperatures []int) []int {
+	steps := []int{}
+	for i := range len(temperatures) {
+		next := nextWarming(temperatures[i], temperatures[i+1:])
+		steps = append(steps, next)
 	}
-
-	return currLetter
+	return steps
 }
 
-func pop[T any](stack *[]T) T {
-	last := (*stack)[len(*stack)-1]
-	*stack = (*stack)[:len(*stack)-1]
-	return last
+func nextWarming(currTemp int, temperatures []int) int {
+	var count int
+	for _, v := range temperatures {
+		count++
+		if currTemp < v {
+			return count
+		}
+	}
+	return 0
 }
