@@ -1,38 +1,26 @@
 package main
 
-// problem:	https://neetcode.io/problems/daily-temperatures/
-// level:	medium
+// problem:	https://neetcode.io/problems/remove-duplicates-from-sorted-array/
+// level:	easy
 
-// task:	дан массив температур. Вернуть такой же массив, где будут цифры, указывающие
-//			сколько детей до потепления. Пример: [30,38,30,36,35,40,28], на выходе: [1 4 1 2 1 0 0]
-//			Объяснение:	1) 1-ый день = 30, следующее потепление = 38, разница 1
-//						2) 2-ой день = 38, следующее потепление = 40, разница 4 и тд.
+// task:	...
 
 func main() {
-	dailyTemperatures([]int{30, 38, 30, 36, 35, 40, 28})
-	dailyTemperatures([]int{22, 21, 20})
+	removeDuplicates([]int{2, 10, 10, 30, 30, 30})
+	removeDuplicates([]int{1, 2, 2, 3, 4, 5, 5, 6, 7, 7, 8})
 }
 
-// [30,38,30,36,35,40,28]
-//                    ^
-//  [1 4 1 2 1 0 0]
+func removeDuplicates(nums []int) int {
+	l, r := 0, 1
 
-func dailyTemperatures(temperatures []int) []int {
-	steps := []int{}
-	for i := range len(temperatures) {
-		next := nextWarming(temperatures[i], temperatures[i+1:])
-		steps = append(steps, next)
-	}
-	return steps
-}
-
-func nextWarming(currTemp int, temperatures []int) int {
-	var count int
-	for _, v := range temperatures {
-		count++
-		if currTemp < v {
-			return count
+	for r != len(nums) {
+		if nums[l] == nums[r] {
+			r++
+		} else if nums[r] > nums[l] {
+			nums[l+1] = nums[r]
+			l++
+			r++
 		}
 	}
-	return 0
+	return len(nums[:l+1])
 }
